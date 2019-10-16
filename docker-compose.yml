@@ -1,5 +1,18 @@
 version: '3'
 services:
+  web_service:
+    container_name: xiusin-web
+    build: ./client
+    expose:
+      - 3000
+    ports:
+      - ${WEB_PORT}:3000
+    volumes:
+      - ./client/src:/app/src
+      - ./client/public:/app/public
+    command: npm run start
+    links:
+      - api_service
   api_service:
     container_name: xiusin-api
     build: ./server
