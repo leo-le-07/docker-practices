@@ -1,8 +1,8 @@
 FROM node:10.16.3-alpine
 
-RUN mkdir /app
-WORKDIR /app
-COPY package.json yarn.lock ./
+RUN mkdir /web_app
+WORKDIR /web_app
+COPY package.json yarn.lock /web_app/
 RUN yarn
 
 COPY . .

@@ -8,8 +8,8 @@ services:
     ports:
       - ${WEB_PORT}:3000
     volumes:
-      - ./client/src:/app/src
-      - ./client/public:/app/public
+      - ./client:/web_app
+      - /web_app/node_modules
     command: npm run start
     links:
       - api_service
@@ -21,7 +21,8 @@ services:
     ports:
       - ${API_PORT}:${API_PORT}
     volumes:
-      - ./server/src:/app/src
+      - ./server:/api_app
+      - /api_app/node_modules
     command: npm run start
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
