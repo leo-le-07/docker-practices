@@ -15,15 +15,13 @@ interface IProps extends WithStyles<typeof styles> {}
 
 const NavBar = ({ classes }: IProps) => {
   return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" color="inherit">
-            xiusin
-          </Typography>
-        </Toolbar>
-      </AppBar>
-    </div>
+    <AppBar position="absolute">
+      <Toolbar>
+        <Typography variant="h6" color="inherit">
+          xiusin
+        </Typography>
+      </Toolbar>
+    </AppBar>
   )
 }
 
