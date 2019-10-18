@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper'
 
 import NavBar from './components/nav-bar'
 import StatusEditor from './components/status-editor'
+import Feeds from './components/feeds'
 
 const theme = createMuiTheme({
   palette: {
@@ -57,6 +58,9 @@ const App = () => {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <StatusEditor />
+              </Grid>
+              <Grid item xs={12}>
+                <Feeds />
               </Grid>
             </Grid>
           </Container>
