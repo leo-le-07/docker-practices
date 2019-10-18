@@ -1,10 +1,16 @@
-import React from 'react';
-import { makeStyles, createStyles, Theme, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
-import orange from "@material-ui/core/colors/orange";
-import teal from "@material-ui/core/colors/teal";
+import React from 'react'
+import {
+  makeStyles,
+  createStyles,
+  Theme,
+  MuiThemeProvider,
+  createMuiTheme,
+} from '@material-ui/core/styles'
+import orange from '@material-ui/core/colors/orange'
+import teal from '@material-ui/core/colors/teal'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container'
+import Grid from '@material-ui/core/Grid'
 
 import NavBar from './components/nav-bar'
 import StatusEditor from './components/status-editor'
@@ -22,10 +28,10 @@ const theme = createMuiTheme({
     secondary: {
       light: orange[300],
       main: orange[500],
-      dark: orange[700]
-    }
+      dark: orange[700],
+    },
   },
-});
+})
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     appBarSpacer: theme.mixins.toolbar,
   }),
-);
+)
 
 const App = () => {
   const classes = useStyles({})
@@ -73,7 +79,7 @@ const App = () => {
         </div>
       </NotificationProvider>
     </MuiThemeProvider>
-  );
+  )
 }
 
-export default App;
+export default App

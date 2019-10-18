@@ -21,7 +21,9 @@ const Notification = (): any => {
 
   const { state, dispatch } = useContext(NotificationContext)
 
-  const keys = state.notifications.map((item: INotification) => item.key).join('-')
+  const keys = state.notifications
+    .map((item: INotification) => item.key)
+    .join('-')
   useEffect(() => {
     const { notifications } = state
 
@@ -32,15 +34,12 @@ const Notification = (): any => {
         const options = {
           key: notification.key,
           variant: getVariantType(notification.type),
-          onClose: (event: any, reason: any) => {
+          onClose: () => {
             dispatch(dismiss(key))
           },
         }
 
-        enqueueSnackbar(
-          notification.message,
-          options,
-        )
+        enqueueSnackbar(notification.message, options)
         dispatch(markAsShowed(key))
       })
   }, [keys, dispatch, state, enqueueSnackbar])

@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(2),
     },
   }),
-);
+)
 
 const Feeds = () => {
   const classes = useStyles({})

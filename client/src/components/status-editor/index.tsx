@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
       alignContent: 'space-between',
     },
   }),
-);
+)
 
 const StatusEditor = () => {
   const classes = useStyles({})
@@ -56,7 +56,7 @@ const StatusEditor = () => {
         multiline
         rows={3}
         value={content}
-        onChange={(e) => setContent(e!.target.value)}
+        onChange={(e) => setContent(e.target.value)}
       />
       <div className={classes.actions}>
         <div>
@@ -65,11 +65,11 @@ const StatusEditor = () => {
             id="image"
             type="file"
             className={classes.inputFile}
-            onChange={e => setImage(e.target.files[0])}
+            onChange={(e) => setImage(e.target.files[0])}
           />
           <label htmlFor="image">
             <Button
-              style={{ color: image && "green" }}
+              style={{ color: image && 'green' }}
               component="span"
               size="small"
               className={classes.imageButton}

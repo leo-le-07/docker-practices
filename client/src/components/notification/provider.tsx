@@ -23,5 +23,4 @@ const NotificationProvider = (props: any) => {
   )
 }
 
-
 export { NotificationProvider, NotificationContext }

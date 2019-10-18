@@ -4,10 +4,10 @@ export const MARK_AS_SHOWED = 'MARK_AS_SHOWED'
 export const DISMISS = 'DISMISS'
 
 export interface INotification {
-  key: string,
-  message: string,
-  type: string,
-  isShown: boolean,
+  key: string
+  message: string
+  type: string
+  isShown: boolean
 }
 
 interface IState {
@@ -15,19 +15,16 @@ interface IState {
 }
 
 type IAction =
-  { type: 'SHOW_SUCCESS', payload: { key: string, message: string } }
-  | { type: 'SHOW_ERROR', payload: { key: string, message: string } }
-  | { type: 'MARK_AS_SHOWED', payload: string }
-  | { type: 'DISMISS', payload: string }
+  | { type: 'SHOW_SUCCESS'; payload: { key: string; message: string } }
+  | { type: 'SHOW_ERROR'; payload: { key: string; message: string } }
+  | { type: 'MARK_AS_SHOWED'; payload: string }
+  | { type: 'DISMISS'; payload: string }
 
 export const initialStates: IState = {
   notifications: [],
 }
 
-const reducer = (
-  state: IState,
-  action: IAction,
-) => {
+const reducer = (state: IState, action: IAction) => {
   switch (action.type) {
     case SHOW_SUCCESS:
       return {
@@ -58,20 +55,24 @@ const reducer = (
     case MARK_AS_SHOWED:
       return {
         ...state,
-        notifications: state.notifications.map((notification: INotification) => {
-          if (notification.key === action.payload) {
-            return {
-              ...notification,
-              isShown: true,
+        notifications: state.notifications.map(
+          (notification: INotification) => {
+            if (notification.key === action.payload) {
+              return {
+                ...notification,
+                isShown: true,
+              }
             }
-          }
-          return notification
-        }),
+            return notification
+          },
+        ),
       }
     case DISMISS:
       return {
         ...state,
-        notifications: state.notifications.filter((notification: INotification) => notification.key !== action.payload),
+        notifications: state.notifications.filter(
+          (notification: INotification) => notification.key !== action.payload,
+        ),
       }
     default:
       return state
