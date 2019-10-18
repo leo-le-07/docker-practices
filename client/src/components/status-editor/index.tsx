@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import InputBase from '@material-ui/core/InputBase'
@@ -6,6 +6,9 @@ import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import AddAPhotoIcon from '@material-ui/icons/AddAPhotoTwoTone'
 import SendIcon from '@material-ui/icons/Send'
+
+import { NotificationContext } from '../../components/notification/provider'
+import { showSuccess } from '../../components/notification/action'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,6 +42,11 @@ const StatusEditor = () => {
   const classes = useStyles({})
   const [content, setContent] = useState('')
   const [image, setImage] = useState<File>()
+  const { dispatch } = useContext(NotificationContext)
+
+  const popupNotification = () => {
+    dispatch(showSuccess('Thanh cong roi'))
+  }
 
   return (
     <Paper className={classes.root}>
@@ -70,7 +78,12 @@ const StatusEditor = () => {
             </Button>
           </label>
         </div>
-        <IconButton color="primary" className={classes.submitButton} aria-label="submit">
+        <IconButton
+          onClick={popupNotification}
+          color="primary"
+          className={classes.submitButton}
+          aria-label="submit"
+        >
           <SendIcon />
         </IconButton>
       </div>

@@ -5,11 +5,12 @@ import teal from "@material-ui/core/colors/teal";
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper'
 
 import NavBar from './components/nav-bar'
 import StatusEditor from './components/status-editor'
 import Feeds from './components/feeds'
+import { NotificationProvider } from './components/notification/provider'
+import Notification from './components/notification'
 
 const theme = createMuiTheme({
   palette: {
@@ -49,23 +50,28 @@ const App = () => {
 
   return (
     <MuiThemeProvider theme={theme}>
-      <div className={classes.root}>
-        <CssBaseline />
-        <NavBar />
-        <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
-          <Container maxWidth="sm" className={classes.container}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <StatusEditor />
+      <CssBaseline />
+
+      <NotificationProvider>
+        <Notification />
+
+        <div className={classes.root}>
+          <NavBar />
+          <main className={classes.content}>
+            <div className={classes.appBarSpacer} />
+            <Container maxWidth="sm" className={classes.container}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <StatusEditor />
+                </Grid>
+                <Grid item xs={12}>
+                  <Feeds />
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <Feeds />
-              </Grid>
-            </Grid>
-          </Container>
-        </main>
-      </div>
+            </Container>
+          </main>
+        </div>
+      </NotificationProvider>
     </MuiThemeProvider>
   );
 }

@@ -10,6 +10,7 @@
     "@types/react": "16.9.7",
     "@types/react-dom": "16.9.2",
     "clsx": "^1.0.4",
+    "notistack": "^0.9.5",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-scripts": "3.2.0",
