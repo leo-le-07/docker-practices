@@ -2,10 +2,13 @@
 
 # dependencies
 /node_modules
+
 /client/node_modules
 /client/build
 /client/coverage
+
 /server/node_modules
+/server/src/uploads
 
 /.pnp
 .pnp.js
