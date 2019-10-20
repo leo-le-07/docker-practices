@@ -9,7 +9,6 @@ export default `
   type Photo {
     id: String!
     url: String!
-    description: String!
     mimetype: String!
     fileName: String!
   }
@@ -20,6 +19,7 @@ export default `
   }
 
   type Mutation {
-    singleUpload(file: Upload!, description: String): Photo!
+    singleUpload(file: Upload!): Photo!
+    multipleUpload(files: [Upload!]!): [Photo!]!
   }
 `
