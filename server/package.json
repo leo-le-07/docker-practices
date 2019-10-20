@@ -13,6 +13,7 @@
     "apollo-boost": "^0.4.4",
     "apollo-server-express": "^2.9.6",
     "body-parser": "^1.19.0",
+    "cloudinary": "^1.16.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "graphql": "^14.5.8",

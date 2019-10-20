@@ -1,34 +1,40 @@
 import shortid from 'shortid'
 import fs from 'fs'
 import path from 'path'
+import cloudinary from 'cloudinary'
 
-const UPLOAD_DIR = './uploads'
-
-const storeFileLocalAndPersistDb = async ({ file, db }) => {
-  const { filename, mimetype, createReadStream } = await file
-  const id = shortid.generate()
-  const filePath = path.join(__dirname, `${UPLOAD_DIR}/${id}-${filename}`) 
+const upload = async ({ file }) => {
+  let url
+  const { createReadStream } = await file
   const stream = createReadStream()
 
-  // Store the file in the filesystem
-  await new Promise((resolve, reject) =>
-    stream
-      .on('error', error => {
-        if (stream.truncated) fs.unlinkSync(filePath)
-        reject(error)
+  const cloudinaryUpload = async (stream) => {
+    await new Promise((resolve, reject) => {
+      const streamLoad = cloudinary.v2.uploader.upload_stream((error, image) => {
+        if (error) {
+          reject(error)
+        }
+        url = image.url
+        resolve(url)
       })
-      .pipe(fs.createWriteStream(filePath))
-      .on('error', error => {
-        return reject(error)
-      })
-      .on('finish', () => resolve())
-  )
+
+      stream.pipe(streamLoad)
+    })
+  }
+
+  await cloudinaryUpload(stream)
+
+  return url
+}
+
+const uploadFileAndPersistDb = async ({ file, db }) => {
+  const url = await upload({ file })
 
   const photo = await db.Photo.create({
-    url: filePath,
-    fileName: filename,
+    url,
+    fileName: 'this-field-will-be-deleted',
     description: 'this-field-will-be-deleted',
-    mimetype,
+    mimetype: 'this-field-will-be-deleted',
   })
 
   return photo
@@ -41,12 +47,12 @@ export default {
   },
   Mutation: {
     singleUpload: async (parent, { file }, { db }) => {
-      const photo = await storeFileLocalAndPersistDb({ file, db })
+      const photo = await uploadFileAndPersistDb({ file, db })
 
       return photo
     },
     multipleUpload: async (parent, { files }, { db }) => {
-      const photos = await Promise.all(files.map(file => storeFileLocalAndPersistDb({ file, db })))
+      const photos = await Promise.all(files.map(file => uploadFileAndPersistDb({ file, db })))
       return photos
     }
   },
