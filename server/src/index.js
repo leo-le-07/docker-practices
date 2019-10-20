@@ -1,34 +1,28 @@
 import express from 'express'
 import morgan from 'morgan'
-import { Client } from 'pg'
+import bodyParser from 'body-parser'
 
 const app = express()
-const PORT = process.env.API_PORT
-
-const client = new Client({
-  password: process.env.POSTGRES_PASSWORD,
-  user: process.env.POSTGRES_USER,
-  host: 'xiusin-db',
-  port: process.env.POSTGRES_PORT,
-})
 
 app.use(morgan('combined'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get('/', (req, res)  => {
-  res.send('Hello from Express.js app!')
+  res.send('Hello from xiusin api!')
 })
+app.get('/health', (req, res) => res.sendStatus(200))
 
-app.get('/ping', async (req, res) => {
-  const database = await client.query('SELECT 1 + 1').then(() => 'up').catch(() => 'down')
-
-  res.send({
-    environment: process.env.NODE_ENV,
-    database,
-  })
-})
-
-;(async () => {
-  await client.connect()
-  app.listen(PORT, () => console.log(`app running on ${PORT}`));
-})()
+let server
+module.exports = {
+  start(port) {
+    server = app.listen(port, () => {
+      console.log(`Api started on port ${port}`)
+    })
+    return app
+  },
+  stop() {
+    server.close()
+  },
+}
 
