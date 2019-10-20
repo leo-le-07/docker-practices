@@ -12,10 +12,10 @@ const upload = async ({ file }) => {
     await new Promise((resolve, reject) => {
       const streamLoad = cloudinary.v2.uploader.upload_stream((error, image) => {
         if (error) {
-          reject(error)
+          return reject(error)
         }
         url = image.url
-        resolve(url)
+        return resolve(url)
       })
 
       stream.pipe(streamLoad)
@@ -32,9 +32,6 @@ const uploadFileAndPersistDb = async ({ file, db }) => {
 
   const photo = await db.Photo.create({
     url,
-    fileName: 'this-field-will-be-deleted',
-    description: 'this-field-will-be-deleted',
-    mimetype: 'this-field-will-be-deleted',
   })
 
   return photo

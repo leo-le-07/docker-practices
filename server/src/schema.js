@@ -9,8 +9,6 @@ export default `
   type Photo {
     id: String!
     url: String!
-    mimetype: String!
-    fileName: String!
   }
 
   type Query {
