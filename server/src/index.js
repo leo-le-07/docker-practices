@@ -1,8 +1,20 @@
 import express from 'express'
 import morgan from 'morgan'
 import bodyParser from 'body-parser'
+import { ApolloServer, gql } from 'apollo-server-express'
+
+import typeDefs from './schema'
+import resolvers from './resolvers'
+import db from './models'
+
+const apolloServer = new ApolloServer({
+  typeDefs: gql(typeDefs),
+  resolvers,
+  context: { db },
+})
 
 const app = express()
+apolloServer.applyMiddleware({ app })
 
 app.use(morgan('combined'))
 app.use(bodyParser.json())
