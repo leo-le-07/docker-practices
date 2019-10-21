@@ -3,12 +3,11 @@ import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import { ApolloServer, gql } from 'apollo-server-express'
 
-import typeDefs from './schema'
-import resolvers from './resolvers'
+import { typeDefs, resolvers } from './controllers'
 import db from './models'
 
 const apolloServer = new ApolloServer({
-  typeDefs: gql(typeDefs),
+  typeDefs,
   resolvers,
   context: { db },
 })
