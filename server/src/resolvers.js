@@ -51,6 +51,23 @@ export default {
     multipleUpload: async (parent, { files }, { db }) => {
       const photos = await Promise.all(files.map(file => uploadFileAndPersistDb({ file, db })))
       return photos
-    }
+    },
+    createPost: async (parent, { file, content, userId }, { db }) => {
+      const url = await upload({ file })
+      const newPost = await db.Post.create({
+        userId,
+        content,
+      })
+      const photo = await db.Photo.create({
+        sourceId: newPost.id,
+        url,
+      })
+      return newPost
+    },
+  },
+  Post: {
+    photos: (post, {}, { db }) => {
+      return db.Photo.findAll({ where: { sourceId: post.id } })
+    },
   },
 }

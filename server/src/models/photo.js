@@ -4,9 +4,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    sourceId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   });
   Photo.associate = (models) => {
-    // associations can be defined here
+    Photo.belongsTo(models.Post, {
+      as: 'post',
+      foreignKey: 'sourceId',
+    })
   };
   return Photo;
 };

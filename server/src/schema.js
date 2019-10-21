@@ -4,10 +4,17 @@ export default `
     name: String!
     username: String!
     password: String!
+    posts: [Post]!
+  }
+
+  type Post {
+    id: ID!
+    content: String!
+    photos: [Photo]!
   }
 
   type Photo {
-    id: String!
+    id: ID!
     url: String!
   }
 
@@ -19,5 +26,6 @@ export default `
   type Mutation {
     singleUpload(file: Upload!): Photo!
     multipleUpload(files: [Upload!]!): [Photo!]!
+    createPost(userId: ID!, content: String!, file: Upload!): Post!
   }
 `

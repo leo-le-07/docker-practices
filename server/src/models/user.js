@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.associate = (models) => {
-    // associations can be defined here
+    User.hasMany(models.Post, {
+      as: 'posts',
+      onDelete: 'CASCADE',
+    })
   };
 
   return User;
