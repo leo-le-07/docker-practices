@@ -11,6 +11,8 @@ services:
       - ./client:/web_app
       - /web_app/node_modules
     command: npm run start
+    environment:
+      REACT_APP_API_URI: ${API_URI}
     links:
       - api_service
   api_service:
@@ -31,6 +33,7 @@ services:
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_DB_NAME: ${POSTGRES_DB_NAME}
       API_PORT: ${API_PORT}
+      WEB_URI: ${WEB_URI}
       NODE_ENV: development
       CLOUDINARY_URL: ${CLOUDINARY_URL}
     links:
