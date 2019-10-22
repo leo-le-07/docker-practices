@@ -9,11 +9,20 @@ export const typeDef = gql`
     photos: [Photo]!
   }
 
+  extend type Query {
+    posts(userId: ID!): [Post!]!
+  }
+
   extend type Mutation {
     createPost(userId: ID!, content: String!, url: String!): Post!
   }
 `
 export const resolvers = {
+  Query: {
+    posts: async (parent, { userId }, { db }) => {
+      return db.Post.findAll({ where: { userId } })
+    },
+  },
   Mutation: {
     createPost: async (parent, { url, content, userId }, { db }) => {
       const newPost = await db.Post.create({

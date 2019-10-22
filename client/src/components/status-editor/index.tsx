@@ -37,7 +37,7 @@ const StatusEditor = () => {
   const [submitAvailable, setSubmitAvailable] = useState(false)
   const [uploading, setUploading] = useState(false)
 
-  const [createPost, { loading: createPostLoading, error }] = useMutation(
+  const [createPost, { loading: creatingPost, error }] = useMutation(
     CREATE_POST,
     {
       onCompleted: () => {
@@ -57,9 +57,9 @@ const StatusEditor = () => {
   )
 
   useEffect(() => {
-    if (createPostLoading || content === '') return setSubmitAvailable(false)
+    if (creatingPost || content === '') return setSubmitAvailable(false)
     setSubmitAvailable(true)
-  }, [content, createPostLoading])
+  }, [content, creatingPost])
 
   const handleSubmit = () => {
     const variables = {
@@ -121,7 +121,7 @@ const StatusEditor = () => {
             </label>
           </div>
         )}
-        {createPostLoading ? (
+        {creatingPost ? (
           <CircularProgress className={classes.progress} />
         ) : (
           <IconButton

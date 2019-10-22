@@ -8,7 +8,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+  }, {
+    freezeTableName: true,
+    tableName: 'photo'
   });
+
   Photo.associate = (models) => {
     Photo.belongsTo(models.Post, {
       as: 'post',

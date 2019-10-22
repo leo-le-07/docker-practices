@@ -10,9 +10,9 @@ module.exports = {
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
     return Promise.all([
-      queryInterface.removeColumn('Photos', 'description'),
-      queryInterface.removeColumn('Photos', 'fileName'),
-      queryInterface.removeColumn('Photos', 'mimetype'),
+      queryInterface.removeColumn('photo', 'description'),
+      queryInterface.removeColumn('photo', 'fileName'),
+      queryInterface.removeColumn('photo', 'mimetype'),
     ])
   },
 
@@ -25,15 +25,15 @@ module.exports = {
       return queryInterface.dropTable('users');
     */
     return Promise.all([
-      queryInterface.addColumn('Photos', 'description', {
+      queryInterface.addColumn('photo', 'description', {
         type: Sequelize.STRING,
         allowNull: false,
       }),
-      queryInterface.removeColumn('Photos', 'fileName', {
+      queryInterface.removeColumn('photo', 'fileName', {
         type: Sequelize.STRING,
         allowNull: false,
       }),
-      queryInterface.removeColumn('Photos', 'mimetype', {
+      queryInterface.removeColumn('photo', 'mimetype', {
         type: Sequelize.STRING,
         allowNull: false,
       }),

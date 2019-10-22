@@ -12,12 +12,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+  }, {
+    freezeTableName: true,
+    tableName: 'user'
   });
 
   User.associate = (models) => {
     User.hasMany(models.Post, {
       as: 'posts',
       onDelete: 'CASCADE',
+      foreignKey: 'userId',
     })
   };
 
