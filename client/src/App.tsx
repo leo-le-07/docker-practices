@@ -1,4 +1,6 @@
 import React from 'react'
+import ApolloClient from 'apollo-boost'
+import { ApolloProvider } from '@apollo/react-hooks'
 import {
   makeStyles,
   createStyles,
@@ -51,34 +53,38 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
+const client = new ApolloClient({ uri: `${process.env.REACT_APP_API_URI}/graphql` })
+
 const App = () => {
   const classes = useStyles({})
 
   return (
-    <MuiThemeProvider theme={theme}>
-      <CssBaseline />
+    <ApolloProvider client={client}>
+      <MuiThemeProvider theme={theme}>
+        <CssBaseline />
 
-      <NotificationProvider>
-        <Notification />
+        <NotificationProvider>
+          <Notification />
 
-        <div className={classes.root}>
-          <NavBar />
-          <main className={classes.content}>
-            <div className={classes.appBarSpacer} />
-            <Container maxWidth="sm" className={classes.container}>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <StatusEditor />
+          <div className={classes.root}>
+            <NavBar />
+            <main className={classes.content}>
+              <div className={classes.appBarSpacer} />
+              <Container maxWidth="sm" className={classes.container}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <StatusEditor />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Feeds />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <Feeds />
-                </Grid>
-              </Grid>
-            </Container>
-          </main>
-        </div>
-      </NotificationProvider>
-    </MuiThemeProvider>
+              </Container>
+            </main>
+          </div>
+        </NotificationProvider>
+      </MuiThemeProvider>
+    </ApolloProvider>
   )
 }
 

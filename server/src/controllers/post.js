@@ -16,6 +16,7 @@ export const typeDef = gql`
 export const resolvers = {
   Mutation: {
     createPost: async (parent, { file, content, userId }, { db }) => {
+      console.log({ file, content, userId })
       const url = await upload({ file })
       const newPost = await db.Post.create({
         userId,

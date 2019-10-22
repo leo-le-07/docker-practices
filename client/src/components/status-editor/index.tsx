@@ -1,48 +1,55 @@
-import React, { useState, useContext } from 'react'
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
+import React, { useState, useContext, useEffect } from 'react'
+import { useMutation } from '@apollo/react-hooks'
+import { gql } from 'apollo-boost'
 import Paper from '@material-ui/core/Paper'
 import InputBase from '@material-ui/core/InputBase'
 import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import AddAPhotoIcon from '@material-ui/icons/AddAPhotoTwoTone'
 import SendIcon from '@material-ui/icons/Send'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { NotificationContext } from '../../components/notification/provider'
 import { showSuccess } from '../../components/notification/action'
+import useStyles from './style'
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    input: {
-      padding: theme.spacing(2),
-    },
-    inputFile: {
-      display: 'none',
-    },
-    imageButton: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      marginLeft: 0,
-    },
-    submitButton: {
-      marginBottom: theme.spacing(1),
-    },
-    actions: {
-      display: 'flex',
-      alignContent: 'space-between',
-    },
-  }),
-)
+const CREATE_POST = gql`
+mutation CreatePost($userId: ID!, $content: String!, $file: Upload!) {
+  createPost(userId: $userId, content: $content, file: $file) {
+    id
+    content
+    photos {
+      id
+      url
+    }
+  }
+}
+`
 
 const StatusEditor = () => {
   const classes = useStyles({})
+  const { dispatch } = useContext(NotificationContext)
+
+  const [createPost, { data, loading: createPostLoading, error }] = useMutation(CREATE_POST)
+
   const [content, setContent] = useState('')
   const [image, setImage] = useState<File>()
-  const { dispatch } = useContext(NotificationContext)
+  const [submitAvailable, setSubmitAvailable] = useState(false)
+  useEffect(() => {
+    if (createPostLoading || content === '') return setSubmitAvailable(false)
+    setSubmitAvailable(true)
+  }, [content, createPostLoading])
+
+
+  const handleSubmit = () => {
+    const variables = {
+      content,
+      userId: 1, // Hard code
+      file: image,
+    }
+    console.log({ variables })
+    createPost({ variables })
+  }
 
   const popupNotification = () => {
     dispatch(showSuccess('Thanh cong roi'))
@@ -61,7 +68,7 @@ const StatusEditor = () => {
       <div className={classes.actions}>
         <div>
           <input
-            accept="image/*"
+            // accept="image/*"
             id="image"
             type="file"
             className={classes.inputFile}
@@ -78,14 +85,20 @@ const StatusEditor = () => {
             </Button>
           </label>
         </div>
-        <IconButton
-          onClick={popupNotification}
-          color="primary"
-          className={classes.submitButton}
-          aria-label="submit"
-        >
-          <SendIcon />
-        </IconButton>
+        { createPostLoading ? (
+          <CircularProgress className={classes.progress} />
+          ) : (
+            <IconButton
+              onClick={handleSubmit}
+              disabled={!submitAvailable}
+              color="primary"
+              className={classes.submitButton}
+              aria-label="submit"
+            >
+              <SendIcon />
+            </IconButton>
+          )
+        }
       </div>
     </Paper>
   )
