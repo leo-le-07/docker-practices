@@ -1,6 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useRef } from 'react'
 import { useMutation } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
+import axios from 'axios'
 import Paper from '@material-ui/core/Paper'
 import InputBase from '@material-ui/core/InputBase'
 import IconButton from '@material-ui/core/IconButton'
@@ -10,49 +11,80 @@ import SendIcon from '@material-ui/icons/Send'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { NotificationContext } from '../../components/notification/provider'
-import { showSuccess } from '../../components/notification/action'
+import { showSuccess, showError } from '../../components/notification/action'
 import useStyles from './style'
 
 const CREATE_POST = gql`
-mutation CreatePost($userId: ID!, $content: String!, $file: Upload!) {
-  createPost(userId: $userId, content: $content, file: $file) {
-    id
-    content
-    photos {
+  mutation CreatePost($userId: ID!, $content: String!, $url: String!) {
+    createPost(userId: $userId, content: $content, url: $url) {
       id
-      url
+      content
+      photos {
+        id
+        url
+      }
     }
   }
-}
 `
 
 const StatusEditor = () => {
   const classes = useStyles({})
   const { dispatch } = useContext(NotificationContext)
 
-  const [createPost, { data, loading: createPostLoading, error }] = useMutation(CREATE_POST)
-
+  const inputFileElement = useRef<HTMLInputElement>(null)
   const [content, setContent] = useState('')
-  const [image, setImage] = useState<File>()
+  const [imageUrl, setImageUrl] = useState('')
   const [submitAvailable, setSubmitAvailable] = useState(false)
+  const [uploading, setUploading] = useState(false)
+
+  const [createPost, { loading: createPostLoading, error }] = useMutation(
+    CREATE_POST,
+    {
+      onCompleted: () => {
+        setContent('')
+        setImageUrl('')
+        if (inputFileElement !== null && inputFileElement.current !== null) {
+          inputFileElement.current.value = ''
+        }
+
+        if (!error) {
+          dispatch(showSuccess('Post created'))
+        } else {
+          dispatch(showError('Post failed: ' + error))
+        }
+      },
+    },
+  )
+
   useEffect(() => {
     if (createPostLoading || content === '') return setSubmitAvailable(false)
     setSubmitAvailable(true)
   }, [content, createPostLoading])
 
-
   const handleSubmit = () => {
     const variables = {
       content,
       userId: 1, // Hard code
-      file: image,
+      url: imageUrl,
     }
-    console.log({ variables })
     createPost({ variables })
   }
 
-  const popupNotification = () => {
-    dispatch(showSuccess('Thanh cong roi'))
+  const handleUpload = async (event: any) => {
+    setUploading(true)
+    const image = event.target.files[0]
+
+    const formData = new FormData()
+    formData.append('file', image)
+    formData.append('upload_preset', 'geopins')
+    formData.append('cloud_name', 'dgu4zdjuf')
+
+    const response = await axios.post(
+      'https://api.cloudinary.com/v1_1/dgu4zdjuf/image/upload',
+      formData,
+    )
+    setImageUrl(response.data.url)
+    setUploading(false)
   }
 
   return (
@@ -66,39 +98,42 @@ const StatusEditor = () => {
         onChange={(e) => setContent(e.target.value)}
       />
       <div className={classes.actions}>
-        <div>
-          <input
-            // accept="image/*"
-            id="image"
-            type="file"
-            className={classes.inputFile}
-            onChange={(e) => setImage(e.target.files[0])}
-          />
-          <label htmlFor="image">
-            <Button
-              style={{ color: image && 'green' }}
-              component="span"
-              size="small"
-              className={classes.imageButton}
-            >
-              <AddAPhotoIcon />
-            </Button>
-          </label>
-        </div>
-        { createPostLoading ? (
+        {uploading ? (
           <CircularProgress className={classes.progress} />
-          ) : (
-            <IconButton
-              onClick={handleSubmit}
-              disabled={!submitAvailable}
-              color="primary"
-              className={classes.submitButton}
-              aria-label="submit"
-            >
-              <SendIcon />
-            </IconButton>
-          )
-        }
+        ) : (
+          <div>
+            <input
+              accept="image/*"
+              id="image"
+              type="file"
+              className={classes.inputFile}
+              onChange={handleUpload}
+            />
+            <label htmlFor="image">
+              <Button
+                style={{ color: imageUrl && 'green' }}
+                component="span"
+                size="small"
+                className={classes.imageButton}
+              >
+                <AddAPhotoIcon />
+              </Button>
+            </label>
+          </div>
+        )}
+        {createPostLoading ? (
+          <CircularProgress className={classes.progress} />
+        ) : (
+          <IconButton
+            onClick={handleSubmit}
+            disabled={!submitAvailable}
+            color="primary"
+            className={classes.submitButton}
+            aria-label="submit"
+          >
+            <SendIcon />
+          </IconButton>
+        )}
       </div>
     </Paper>
   )

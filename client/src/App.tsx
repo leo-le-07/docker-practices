@@ -53,7 +53,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const client = new ApolloClient({ uri: `${process.env.REACT_APP_API_URI}/graphql` })
+const client = new ApolloClient({
+  uri: `${process.env.REACT_APP_API_URI}/graphql`,
+})
 
 const App = () => {
   const classes = useStyles({})
